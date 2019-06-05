@@ -1,5 +1,5 @@
-import enums.Brand;
-import enums.Engine;
+import Enums.Brand;
+import Enums.Engine;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,8 +82,14 @@ public class CarFactory {
         return car;
     }
 
-    public Car get(String key) throws CloneNotSupportedException {
-        return cars.get(key).clone();
+    public Car get(String key) {
+        Car car = null;
+        try {
+            car =  cars.get(key).clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return car;
     }
 
 }

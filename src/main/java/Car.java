@@ -1,5 +1,5 @@
-import enums.Brand;
-import enums.Engine;
+import Enums.Brand;
+import Enums.Engine;
 
 public class Car implements PrototypeCapable {
     private Brand brand;
@@ -11,11 +11,42 @@ public class Car implements PrototypeCapable {
     private boolean isRented;
     private double pricePerMinute;
 
+    //region Getters
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public Engine getTypeOfEngine() {
+        return typeOfEngine;
+    }
+
+    public int getHorsePower() {
+        return horsePower;
+    }
+
+    public int getProductionYear() {
+        return productionYear;
+    }
+
+    public double getPricePerMinute() {
+        return pricePerMinute;
+    }
+
+    public boolean isInRepair() {
+        return inRepair;
+    }
+
+    public boolean isRented() {
+        return isRented;
+    }
+    //endregion
 
     public Car clone() throws CloneNotSupportedException {
         Car car = (Car) super.clone();
-        car.inRepair = false;
-        car.isRented = false;
         return car;
     }
 
