@@ -1,17 +1,20 @@
 import Enums.Brand;
 import Enums.Engine;
+import Enums.ServiceType;
 import org.junit.Test;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CarRentalTest {
     CarFactory factory = CarFactory.getInstance();
     Client client = new Client();
-    CarRental carRental = new CarRental();
+    CarRental carRental = CarRental.getInstance();
 
     Car expensive = factory.get("expensive");
     Car damaged = factory.get("damaged");
     Car rented = factory.get("rented");
+
 
     @Test
     public void builderTest() {
@@ -36,6 +39,34 @@ public class CarRentalTest {
                 () -> assertFalse(newCar.isInRepair()),
                 () -> assertTrue(newCar.isRented())
         );
+    }
+
+    @Test
+    public void rentingTest() {
+        Customer first = new Customer("Jan", "Kowalski", carRental);
+        Customer second = new Customer("Paweł", "Janek", carRental);
+
+        carRental.publish(expensive);
+        carRental.publish(rented);
+        client.rentOrReturn(first, expensive, ServiceType.RENTING);
+
+        assertAll(
+                () -> assertTrue(expensive.isRented()),
+                () -> assertTrue(first.checkIsRenting()),
+                () -> assertSame(expensive, first.getLastCar())
+        );
+
+        client.rentOrReturn(second, expensive, ServiceType.RENTING);
+        assertFalse(second.checkIsRenting());
+
+        client.rentOrReturn(first, expensive, ServiceType.RETURNING);
+        assertAll(
+                () -> assertFalse(expensive.isRented()),
+                () -> assertFalse(first.checkIsRenting())
+        );
+
+        carRental.clear();
+
     }
 
     @Test
@@ -64,6 +95,8 @@ public class CarRentalTest {
 
         carRental.unregisterObserver(first);
         carRental.publish(damaged);
+        carRental.clear();
+
     }
 
     @Test
@@ -85,5 +118,15 @@ public class CarRentalTest {
                 () -> assertFalse(client.isRentPossible(second, expensive))
         );
 
+    }
+
+    @Test
+    public void discountDecoratorTest() {
+        AbstractCar cheaper_expensive = new DiscountDecorator(40, expensive);
+
+        assertAll(
+                () -> assertEquals(45, expensive.getPricePerMinute()),
+                () -> assertEquals(27, cheaper_expensive.getPricePerMinute())
+        );
     }
 }

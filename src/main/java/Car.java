@@ -1,12 +1,9 @@
 import Enums.Brand;
 import Enums.Engine;
 
-public class Car implements PrototypeCapable {
-    private Brand brand;
-    private String model;
+public class Car extends AbstractCar implements PrototypeCapable {
     private Engine typeOfEngine;
     private int horsePower;
-    private int productionYear;
     private boolean inRepair;
     private boolean isRented;
     private double pricePerMinute;
@@ -42,6 +39,14 @@ public class Car implements PrototypeCapable {
 
     public boolean isRented() {
         return isRented;
+    }
+
+    public boolean isAvailable() {
+        return !inRepair && !isRented;
+    }
+
+    public void renting(boolean value) {
+        this.isRented = value;
     }
     //endregion
 

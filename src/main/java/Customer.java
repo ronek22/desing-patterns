@@ -23,11 +23,32 @@ public class Customer implements Observer {
         return isRenting;
     }
 
+    public void renting(Car car){
+        this.lastCar = car;
+        this.isRenting = true;
+    }
+
+    public void returning(){
+        this.isRenting = false;
+    }
+
+    public Car getLastCar() {
+        return lastCar;
+    }
+
     @Override
     public void update() {
         lastCar = carPublisher.getCar();
         System.out.println(String.format(message, firstName+" "+lastName, lastCar));
+    }
 
-
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", isRenting=" + isRenting +
+                ", lastCar=" + lastCar +
+                '}';
     }
 }
