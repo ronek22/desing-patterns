@@ -45,23 +45,23 @@ public class CarRentalTest {
     public void rentingTest() {
         Customer first = new Customer("Jan", "Kowalski", carRental);
         Customer second = new Customer("Paweł", "Janek", carRental);
+        client.addDefaultCars();
+        client.rentOrReturn(first, "Model 3", ServiceType.RENTING);
+        Car rentedCar = carRental.findCar("Model 3");
 
-        carRental.publish(expensive);
-        carRental.publish(rented);
-        client.rentOrReturn(first, expensive, ServiceType.RENTING);
 
         assertAll(
-                () -> assertTrue(expensive.isRented()),
+                () -> assertTrue(rentedCar.isRented()),
                 () -> assertTrue(first.checkIsRenting()),
-                () -> assertSame(expensive, first.getLastCar())
+                () -> assertSame(rentedCar, first.getLastCar())
         );
 
-        client.rentOrReturn(second, expensive, ServiceType.RENTING);
+        client.rentOrReturn(second, "Model 3", ServiceType.RENTING);
         assertFalse(second.checkIsRenting());
 
-        client.rentOrReturn(first, expensive, ServiceType.RETURNING);
+        client.rentOrReturn(first, "Model 3", ServiceType.RETURNING);
         assertAll(
-                () -> assertFalse(expensive.isRented()),
+                () -> assertFalse(rentedCar.isRented()),
                 () -> assertFalse(first.checkIsRenting())
         );
 

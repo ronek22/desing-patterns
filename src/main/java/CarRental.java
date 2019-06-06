@@ -8,7 +8,6 @@ public class CarRental implements Subject, Publisher {
     private volatile static CarRental instance;
     private List<Car> carList;
     private List<Observer> carSubscribers;
-    private Car car;
     private static final String publishMessage = "Added new vehicle for renting: %s";
 
 
@@ -28,9 +27,19 @@ public class CarRental implements Subject, Publisher {
         return instance;
     }
 
+    public void addCar(Car car) {
+        carList.add(car);
+    }
+
+    public Car findCar(String model) {
+        return carList.stream()
+                .filter(car -> car.getModel().equals(model))
+                .findFirst().orElse(null);
+    }
+
 
     public Car getCar() {
-        return car;
+        return carList.get(carList.size() - 1);
     }
 
 
@@ -64,7 +73,6 @@ public class CarRental implements Subject, Publisher {
 
     @Override
     public void publish(Car car) {
-        this.car = car;
         carList.add(car);
         System.out.println(String.format(publishMessage, car));
         notifyObservers();
